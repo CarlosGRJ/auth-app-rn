@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import FlatButton from '../ui/FlatButton';
 import AuthForm from './AuthForm';
 import { Colors } from '../../constants/styles';
-import { ICredentials } from './types/index';
+import { ICredentials, IUserInfoAuth } from './types/index';
+import { TUseNavigation } from '../../types/navigation-types';
 
 interface AuthContentProps {
-  isLogin: boolean;
-  // TODO: QUITARLE EL OPCIONAL ? Y DESCOMENTAR SU INVOCACIÓN
-  onAuthenticate?: (userLoginInfo: { email: string; password: string }) => void;
+  isLogin?: boolean;
+  onAuthenticate: ({ email, password }: IUserInfoAuth) => Promise<void>;
 }
 
 const AuthContent: React.FC<AuthContentProps> = ({
-  isLogin,
+  isLogin = false,
   onAuthenticate,
 }) => {
+  const navigation = useNavigation<TUseNavigation>();
+
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
     password: false,
@@ -24,8 +27,10 @@ const AuthContent: React.FC<AuthContentProps> = ({
   });
 
   function switchAuthModeHandler() {
-    if(isLogin) {
-      // TODO:
+    if (isLogin) {
+      navigation.replace('Signup');
+    } else {
+      navigation.replace('Login');
     }
   }
 
@@ -54,7 +59,7 @@ const AuthContent: React.FC<AuthContentProps> = ({
       });
       return;
     }
-    // onAuthenticate({ email, password });
+    onAuthenticate({ email, password });
   }
 
   return (

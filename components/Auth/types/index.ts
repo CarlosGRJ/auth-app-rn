@@ -11,3 +11,8 @@ export interface ICredentialsValidation {
   password: boolean;
   confirmPassword: boolean;
 }
+
+export interface IUserInfoAuth {
+  email: string;
+  password: string;
+}
